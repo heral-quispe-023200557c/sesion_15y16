@@ -14,13 +14,19 @@ class PantallaIndicadores extends StatefulWidget {
 
 class _PantallaIndicadoresState extends State<PantallaIndicadores> {
   late final HigieneApiService _servicio;
-  late Future<List<IndicadorHigiene>> _futuroIndicadores;
+  late Future<List<IndicadorHigiene>> _futureIndicadores;
 
   @override
   void initState() {
     super.initState();
     _servicio = HigieneApiService();
-    _futuroIndicadores = _servicio.obtenerIndicadoresPeru();
+    _cargarDatos();
+  }
+
+  void _cargarDatos() {
+    setState(() {
+      _futureIndicadores = _servicio.obtenerIndicadoresPeru();
+    });
   }
 
   @override
@@ -29,27 +35,14 @@ class _PantallaIndicadoresState extends State<PantallaIndicadores> {
     super.dispose();
   }
 
-  Future<void> _recargar() async {
-    setState(() {
-      _futuroIndicadores = _servicio.obtenerIndicadoresPeru();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Contexto Nacional (OMS)'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _recargar,
-            tooltip: 'Actualizar datos',
-          ),
-        ],
       ),
       body: FutureBuilder<List<IndicadorHigiene>>(
-        future: _futuroIndicadores,
+        future: _futureIndicadores,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const EstadoCarga();
@@ -57,36 +50,32 @@ class _PantallaIndicadoresState extends State<PantallaIndicadores> {
 
           if (snapshot.hasError) {
             return EstadoError(
-              mensaje: '${snapshot.error}',
-              alReintentar: _recargar,
+              mensaje: snapshot.error.toString(),
+              alReintentar: _cargarDatos,
             );
           }
 
-          final List<IndicadorHigiene> datos =
-              snapshot.data ?? const <IndicadorHigiene>[];
-
-          if (datos.isEmpty) {
+          final lista = snapshot.data ?? [];
+          if (lista.isEmpty) {
             return const EstadoVacio();
           }
 
-          return RefreshIndicator(
-            onRefresh: _recargar,
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              itemCount: datos.length,
-              itemBuilder: (context, index) {
-                final IndicadorHigiene item = datos[index];
-                return TarjetaIndicador(
-                  indicador: item,
-                  onTap: () {
-                    context.push(
-                      '/indicadores/${item.anio}',
-                      extra: item,
-                    );
-                  },
-                );
-              },
-            ),
+          return ListView.builder(
+            itemCount: lista.length,
+            itemBuilder: (context, index) {
+              final item = lista[index];
+              return TarjetaIndicador(
+                titulo: 'Año ${item.anio}',
+                subtitulo: 'País: ${item.pais} | Código: ${item.codigo}',
+                valor: item.valorTexto,
+                onTap: () {
+                  context.go(
+                    '/indicadores/${item.anio}',
+                    extra: item,
+                  );
+                },
+              );
+            },
           );
         },
       ),

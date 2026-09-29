@@ -8,9 +8,24 @@ import '../screens/pantalla_indicadores.dart';
 import '../screens/pantalla_oportunidades.dart';
 import '../screens/pantalla_personal.dart';
 
+class PantallaRutaInvalida extends StatelessWidget {
+  const PantallaRutaInvalida({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Ruta no encontrada')),
+      body: const Center(
+        child: Text('La ruta solicitada no existe.'),
+      ),
+    );
+  }
+}
+
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   debugLogDiagnostics: true,
+  errorBuilder: (context, state) => const PantallaRutaInvalida(),
   routes: <RouteBase>[
     GoRoute(
       path: '/',
@@ -39,58 +54,18 @@ final GoRouter appRouter = GoRouter(
       routes: <RouteBase>[
         GoRoute(
           path: ':anio',
-          name: 'indicadorDetalle',
+          name: 'indicador_detalle',
           builder: (context, state) {
-            final int? anio = int.tryParse(state.pathParameters['anio'] ?? '');
-            if (anio == null) {
-              return const PantallaRutaInvalida(
-                mensaje: 'El parámetro de año proporcionado no es válido.',
-              );
-            }
-
-            final IndicadorHigiene? indicador =
-                state.extra is IndicadorHigiene ? state.extra as IndicadorHigiene : null;
-
+            final anioStr = state.pathParameters['anio'] ?? '0';
+            final anio = int.tryParse(anioStr) ?? 0;
+            final indicador = state.extra as IndicadorHigiene?;
             return PantallaIndicadorDetalle(
               anio: anio,
-              indicadorInicial: indicador,
+              indicador: indicador,
             );
           },
         ),
       ],
     ),
   ],
-  errorBuilder: (context, state) => PantallaRutaInvalida(
-    mensaje: 'No existe la ruta solicitada: ${state.uri}',
-  ),
 );
-
-class PantallaRutaInvalida extends StatelessWidget {
-  final String mensaje;
-  const PantallaRutaInvalida({super.key, required this.mensaje});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Ruta no encontrada')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Icon(Icons.error_outline, size: 56, color: Colors.orange),
-              const SizedBox(height: 16),
-              Text(mensaje, textAlign: TextAlign.center),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => context.go('/'),
-                child: const Text('Volver al Inicio'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

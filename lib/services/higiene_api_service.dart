@@ -14,7 +14,6 @@ class ApiException implements Exception {
 class HigieneApiService {
   final http.Client _cliente;
 
-  // Constructor con parámetro opcional necesario para los unit tests con MockClient
   HigieneApiService({http.Client? cliente}) : _cliente = cliente ?? http.Client();
 
   static const Duration tiempoLimite = Duration(seconds: 15);

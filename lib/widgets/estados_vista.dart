@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
 
 class EstadoCarga extends StatelessWidget {
-  final String mensaje;
-  const EstadoCarga({
-    super.key,
-    this.mensaje = 'Descargando datos oficiales de la OMS...',
-  });
+  const EstadoCarga({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const CircularProgressIndicator(),
-            const SizedBox(height: 16),
-            Text(mensaje, textAlign: TextAlign.center),
-          ],
-        ),
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+          Text('Cargando indicadores de la OMS...'),
+        ],
       ),
     );
   }
@@ -39,19 +32,19 @@ class EstadoError extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const Icon(Icons.cloud_off, size: 56, color: Colors.red),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             const Text(
               'Ocurrió un problema',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(mensaje, textAlign: TextAlign.center),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: alReintentar,
               icon: const Icon(Icons.refresh),
@@ -70,7 +63,14 @@ class EstadoVacio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('No se encontraron registros de higiene para la consulta.'),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.inbox, size: 64, color: Colors.grey),
+          SizedBox(height: 16),
+          Text('No se encontraron registros de indicadores.'),
+        ],
+      ),
     );
   }
 }

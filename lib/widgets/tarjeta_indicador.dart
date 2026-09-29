@@ -1,54 +1,39 @@
 import 'package:flutter/material.dart';
-import '../models/indicador_higiene.dart';
 
 class TarjetaIndicador extends StatelessWidget {
-  final IndicadorHigiene indicador;
+  final String titulo;
+  final String subtitulo;
+  final String valor;
   final VoidCallback onTap;
 
   const TarjetaIndicador({
     super.key,
-    required this.indicador,
+    required this.titulo,
+    required this.subtitulo,
+    required this.valor,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListTile(
-        onTap: onTap,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'Año ${indicador.anio}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              indicador.valorTexto,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.blueAccent,
+        title: Text(titulo, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(subtitulo),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Chip(
+              label: Text(
+                valor,
+                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),
+            const Icon(Icons.chevron_right),
           ],
         ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 4),
-            Text('Ámbito: ${indicador.ambito}'),
-            const SizedBox(height: 8),
-            LinearProgressIndicator(
-              value: indicador.fraccion,
-              backgroundColor: Colors.grey.shade200,
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blueAccent),
-            ),
-          ],
-        ),
-        trailing: const Icon(Icons.chevron_right),
+        onTap: onTap,
       ),
     );
   }

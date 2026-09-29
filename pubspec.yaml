@@ -1,5 +1,5 @@
 name: sesion_15y16
-description: "Aplicación ManosSeguras"
+description: "Aplicación ManosSeguras - Monitoreo de Higiene de Manos"
 publish_to: 'none'
 
 environment:
@@ -9,11 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-
-  # Navegación declarativa
   go_router: ^17.5.0
-
-  # Cliente HTTP
   http: ^1.5.0
 
 dev_dependencies:

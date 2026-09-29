@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'router/app_router.dart';
 
 void main() {
-  runApp(const ManosSegurasApp());
+  runApp(const MiAplicacion());
 }
 
-class ManosSegurasApp extends StatelessWidget {
-  const ManosSegurasApp({super.key});
+class MiAplicacion extends StatelessWidget {
+  const MiAplicacion({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +14,8 @@ class ManosSegurasApp extends StatelessWidget {
       title: 'ManosSeguras',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
-        colorSchemeSeed: Colors.blueAccent,
       ),
       routerConfig: appRouter,
     );
